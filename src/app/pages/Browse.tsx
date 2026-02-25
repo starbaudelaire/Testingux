@@ -50,10 +50,14 @@ export default function Browse() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-100"
+        className={`sticky top-0 z-30 backdrop-blur-xl border-b transition-all duration-500 ${
+          identityMode === 'vault'
+            ? 'bg-gradient-to-r from-emerald-50/90 via-green-50/90 to-teal-50/90 border-emerald-100/50'
+            : 'bg-white/70 border-gray-100/50'
+        }`}
       >
         <div className="px-4 py-3 flex items-center justify-between max-w-2xl mx-auto">
-          <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+          <button className="p-2 hover:bg-white/60 rounded-xl transition-colors">
             <Menu className="w-6 h-6 text-gray-700" />
           </button>
 
@@ -61,7 +65,7 @@ export default function Browse() {
 
           <button
             onClick={() => navigate('/insights')}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            className="p-2 hover:bg-white/60 rounded-xl transition-colors"
           >
             <BarChart3 className="w-6 h-6 text-gray-700" />
           </button>
@@ -83,7 +87,7 @@ export default function Browse() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search or enter URL"
-            className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition-all shadow-sm"
           />
         </motion.div>
 
@@ -95,7 +99,7 @@ export default function Browse() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.1 }}
-              className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
+              className="bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-100/80 hover:shadow-lg hover:shadow-gray-200/50 transition-all"
             >
               <div className="aspect-video w-full overflow-hidden bg-gray-100">
                 <img
@@ -118,7 +122,7 @@ export default function Browse() {
                 </div>
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-3 px-4 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   Purchase
@@ -133,19 +137,32 @@ export default function Browse() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-6 border border-indigo-100/50"
+          className="relative overflow-hidden bg-gradient-to-br from-indigo-50/80 via-purple-50/80 to-pink-50/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100/50"
         >
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center flex-shrink-0">
+          {/* Subtle animated background */}
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-200/50 to-purple-200/50 blur-3xl"
+          />
+          
+          <div className="relative flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center flex-shrink-0 shadow-sm">
               <Lock className="w-5 h-5 text-indigo-600" />
             </div>
             <div className="flex-1">
               <h4 className="text-sm font-medium text-gray-900 mb-1">
-                Browsing privately
+                Privacy layer active
               </h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Your synthetic persona is active. External trackers see a
-                temporary identity that doesn't link to your authentic self.
+                External trackers see ephemeral signals that don't connect to your Vault identity
               </p>
             </div>
           </div>

@@ -1,7 +1,7 @@
 
-  # Design Privacy-Centric Mobile App
+  # U nya le
 
-  This is a code bundle for Design Privacy-Centric Mobile App. The original project is available at https://www.figma.com/design/DY2Lc31gnaBZpgWQH4dzne/Design-Privacy-Centric-Mobile-App.
+  This is a code bundle for U nya le. The original project is available at https://www.figma.com/design/DY2Lc31gnaBZpgWQH4dzne/U-nya-le.
 
   ## Running the code
 
