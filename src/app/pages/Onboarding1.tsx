@@ -5,7 +5,7 @@ export default function Onboarding1() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -48,32 +48,33 @@ export default function Onboarding1() {
             }}
             className="absolute inset-12 rounded-full border border-indigo-200/30"
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/80 to-indigo-50/80 backdrop-blur-sm" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/80 to-indigo-50/80 backdrop-blur-sm shadow-inner" />
           </motion.div>
         </motion.div>
 
         {/* Content */}
-        <div className="space-y-7">
+        <div className="space-y-6">
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-[32px] tracking-tight text-gray-900 leading-[1.2] font-medium"
+            className="text-[32px] tracking-tight text-gray-900 leading-[1.2] font-semibold"
           >
             Your digital identity
             <br />
-            is constantly observed
+            is constantly observed.
           </motion.h1>
 
+          {/* INI FIX COGNITIVE LOAD LU */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-[17px] text-gray-500 leading-relaxed"
+            className="text-[17px] text-gray-500 max-w-sm mx-auto leading-relaxed"
           >
-            This system separates who you are
+            Your real identity stays sealed.
             <br />
-            from how you are perceived
+            What the world sees is negotiable.
           </motion.p>
         </div>
 
@@ -83,7 +84,7 @@ export default function Onboarding1() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.6 }}
           onClick={() => navigate('/onboarding-2')}
-          className="mt-auto w-full py-4 px-6 bg-gray-900 text-white rounded-[20px] text-[16px] font-medium hover:bg-gray-800 active:scale-[0.98] transition-all shadow-sm"
+          className="mt-auto w-full py-4 px-6 bg-gray-900 text-white rounded-[20px] text-[16px] font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all shadow-md shadow-gray-900/20"
         >
           Initialize Vault
         </motion.button>

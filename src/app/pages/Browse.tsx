@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
 import { BarChart3, Search, Globe, ShoppingBag, Lock, Menu } from 'lucide-react';
 import { IdentityStateIndicator } from '../components/IdentityStateIndicator';
@@ -37,9 +38,18 @@ export default function Browse() {
 
   const handleIdentityReveal = () => {
     setIdentityMode('vault');
+    toast.success('Vault identity active for this transaction.', {
+      description: 'Your real payment info was securely used.',
+      duration: 4000,
+    });
+    
     // Simulate returning to synthetic mode after transaction
     setTimeout(() => {
       setIdentityMode('synthetic');
+      toast('Vault securely locked.', {
+        description: 'Returning to behavioral obfuscation.',
+        icon: '🔒',
+      });
     }, 5000);
   };
 

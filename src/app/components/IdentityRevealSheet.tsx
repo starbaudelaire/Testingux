@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Fingerprint, CheckCircle2, Lock } from 'lucide-react';
-import { useState } from 'react';
+import { Fingerprint, CheckCircle2, ShieldAlert, Lock, ArrowRight } from 'lucide-react';
 
 interface IdentityRevealSheetProps {
   isOpen: boolean;
@@ -9,253 +9,120 @@ interface IdentityRevealSheetProps {
   context?: string;
 }
 
-export function IdentityRevealSheet({
-  isOpen,
-  onClose,
-  onReveal,
-  context = "this interaction",
-}: IdentityRevealSheetProps) {
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+export function IdentityRevealSheet({ isOpen, onClose, onReveal, context }: IdentityRevealSheetProps) {
+  // authState: 'idle' -> 'scanning' -> 'verified' -> 'complete'
+  const [authState, setAuthState] = useState<'idle' | 'scanning' | 'verified' | 'complete'>('idle');
 
-  const handleReveal = () => {
-    setIsAuthenticating(true);
-    
-    // Simulate biometric authentication
+  useEffect(() => {
+    if (isOpen) setAuthState('idle');
+  }, [isOpen]);
+
+  const handleStartAuth = () => {
+    setAuthState('scanning');
+    // Fake biometric delay
     setTimeout(() => {
-      setIsAuthenticating(false);
-      setIsComplete(true);
-    }, 1800);
+      setAuthState('verified');
+    }, 2000);
+  };
 
-    // Complete the flow
+  const handleConfirmAction = () => {
+    setAuthState('complete');
     setTimeout(() => {
       onReveal();
       onClose();
-      setIsComplete(false);
-    }, 2800);
+    }, 600);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={!isAuthenticating ? onClose : undefined}
-            className="fixed inset-0 bg-black/30 backdrop-blur-md z-40"
-          />
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 100 }}
+        className="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100"
+      >
+        <div className="p-6">
+          <div className="text-center space-y-2 mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+              Vault Access Required
+            </h3>
+            <p className="text-sm text-gray-500">
+              {context || "This action requires your authentic identity."}
+            </p>
+          </div>
 
-          {/* Sheet */}
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 35, stiffness: 400 }}
-            className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-2xl rounded-t-[32px] shadow-2xl z-50 max-w-2xl mx-auto border-t border-gray-100/50"
-          >
-            <div className="px-6 pt-5 pb-8 space-y-8">
-              {/* Handle bar */}
-              <div className="flex justify-center">
-                <motion.div
-                  animate={{
-                    width: isAuthenticating ? 60 : 40,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="h-1 bg-gray-300 rounded-full"
-                />
-              </div>
+          <AnimatePresence mode="wait">
+            {authState === 'idle' && (
+              <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 text-left space-y-2">
+                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Data Requested
+                  </span>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li className="flex justify-between border-b border-gray-100 pb-1">
+                      <span className="font-medium">Identity</span><span className="text-gray-500">Authentic Profile</span>
+                    </li>
+                    <li className="flex justify-between border-b border-gray-100 pb-1">
+                      <span className="font-medium">Payment</span><span className="text-gray-500">Primary Method</span>
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  onClick={handleStartAuth}
+                  className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all"
+                >
+                  <Fingerprint className="w-5 h-5" /> Verify to Continue
+                </button>
+              </motion.div>
+            )}
 
-              <AnimatePresence mode="wait">
-                {isComplete ? (
-                  // Success state
-                  <motion.div
-                    key="complete"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="py-8 flex flex-col items-center gap-5"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", duration: 0.6 }}
-                      className="relative"
-                    >
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 flex items-center justify-center">
-                        <CheckCircle2 className="w-10 h-10 text-emerald-600" />
-                      </div>
-                      {/* Success glow */}
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.3],
-                          opacity: [0.4, 0],
-                        }}
-                        transition={{
-                          duration: 1.2,
-                          repeat: Infinity,
-                        }}
-                        className="absolute inset-0 rounded-full bg-emerald-300 blur-xl"
-                      />
-                    </motion.div>
-                    <div className="text-center space-y-2">
-                      <p className="text-base text-gray-900 font-medium">Identity revealed</p>
-                      <p className="text-sm text-gray-500">Completing transaction securely</p>
-                    </div>
-                  </motion.div>
-                ) : isAuthenticating ? (
-                  // Authenticating state
-                  <motion.div
-                    key="authenticating"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="py-8 flex flex-col items-center gap-6"
-                  >
-                    <div className="relative w-24 h-24">
-                      {/* Scanning ring animation */}
-                      <motion.div
-                        animate={{
-                          rotate: 360,
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                        className="absolute inset-0"
-                      >
-                        <div className="w-full h-full rounded-full border-[3px] border-transparent border-t-indigo-400 border-r-indigo-300" />
-                      </motion.div>
-                      
-                      {/* Pulsing background */}
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.15, 1],
-                          opacity: [0.5, 0.8, 0.5],
-                        }}
-                        transition={{
-                          duration: 1.8,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                        className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 blur-md"
-                      />
-                      
-                      {/* Center icon */}
-                      <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center">
-                        <Fingerprint className="w-11 h-11 text-indigo-600" />
-                      </div>
-                    </div>
-                    
-                    <div className="text-center space-y-1.5">
-                      <p className="text-base text-gray-900 font-medium">Verifying</p>
-                      <p className="text-sm text-gray-500">Unlocking your Vault identity</p>
-                    </div>
-                  </motion.div>
-                ) : (
-                  // Prompt state
-                  <motion.div
-                    key="prompt"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="space-y-7"
-                  >
-                    {/* Icon */}
-                    <div className="flex justify-center pt-2">
-                      <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: "spring", duration: 0.7 }}
-                        className="relative"
-                      >
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
-                          <Fingerprint className="w-9 h-9 text-indigo-600" />
-                        </div>
-                        {/* Ambient glow */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-200 to-purple-200 blur-2xl opacity-40" />
-                      </motion.div>
-                    </div>
+            {authState === 'scanning' && (
+              <motion.div key="scanning" className="flex flex-col items-center py-8">
+                <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                  <Fingerprint className="w-16 h-16 text-indigo-500" />
+                </motion.div>
+                <p className="text-sm text-gray-500 mt-4 animate-pulse">Authenticating biometrics...</p>
+              </motion.div>
+            )}
 
-                    {/* Content */}
-                    <div className="text-center space-y-3">
-                      <motion.h3
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-[19px] text-gray-900 font-medium tracking-tight"
-                      >
-                        Unlock Vault identity
-                      </motion.h3>
-                      <motion.p
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 }}
-                        className="text-[15px] text-gray-500 leading-relaxed px-2"
-                      >
-                        {context} requires your authentic identity
-                      </motion.p>
-                    </div>
-{/* Data Request Summary Card (TAMBAHAN BARU) */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18 }}
-                    className="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-4 text-left space-y-2 mt-4"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      {/* Pastikan lu import Lock dari 'lucide-react' di atas bareng Scan & ArrowRight */}
-                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1">
-                        🔒 Vault Data Requested
-                      </span>
-                    </div>
-                    <ul className="text-sm text-gray-700 space-y-2">
-                      <li className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="font-medium">Real Name</span>
-                        <span className="text-gray-500">Simon</span>
-                      </li>
-                      <li className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="font-medium">Payment</span>
-                        <span className="text-gray-500">Visa ending in 4242</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="font-medium">Shipping</span>
-                        <span className="text-gray-500">Yogyakarta, ID</span>
-                      </li>
-                    </ul>
-                  </motion.div>
-                    {/* Actions */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="space-y-3 pt-3"
-                    >
-                      <button
-                        onClick={handleReveal}
-                        className="w-full py-4 px-6 bg-gray-900 text-white rounded-[18px] text-[15px] font-medium hover:bg-gray-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-sm"
-                      >
-                        <Fingerprint className="w-[18px] h-[18px]" />
-                        Authenticate with biometrics
-                      </button>
-                      <button
-                        onClick={onClose}
-                        className="w-full py-4 px-6 bg-gray-100 text-gray-700 rounded-[18px] text-[15px] font-medium hover:bg-gray-150 active:scale-[0.98] transition-all"
-                      >
-                        Cancel
-                      </button>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+            {authState === 'verified' && (
+              <motion.div key="verified" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center space-y-6">
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Verification Successful</h4>
+                  <p className="text-sm text-gray-500 mt-1">Ready to use authentic identity.</p>
+                </div>
+                {/* INI KUNCI AGENCY UX LU: Explicit Confirmation */}
+                <button
+                  onClick={handleConfirmAction}
+                  className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all"
+                >
+                  Confirm Vault Access <ArrowRight className="w-4 h-4" />
+                </button>
+              </motion.div>
+            )}
+
+            {authState === 'complete' && (
+              <motion.div key="complete" className="flex flex-col items-center py-8">
+                 <ShieldAlert className="w-16 h-16 text-emerald-500" />
+                 <p className="text-sm font-medium text-emerald-700 mt-4">Vault Identity Active</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {authState === 'idle' && (
+            <button onClick={onClose} className="w-full mt-3 py-3 text-gray-500 text-sm font-medium hover:text-gray-900 transition-colors">
+              Cancel
+            </button>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
 }
