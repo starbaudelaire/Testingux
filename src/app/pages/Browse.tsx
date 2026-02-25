@@ -133,37 +133,28 @@ export default function Browse() {
         </div>
 
         {/* Privacy Info Card */}
+        {/* Privacy Info Card (UPDATED) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="relative overflow-hidden bg-gradient-to-br from-indigo-50/80 via-purple-50/80 to-pink-50/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100/50"
+          className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-6 border border-indigo-100/50"
         >
-          {/* Subtle animated background */}
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-200/50 to-purple-200/50 blur-3xl"
-          />
-          
-          <div className="relative flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center flex-shrink-0">
               <Lock className="w-5 h-5 text-indigo-600" />
             </div>
             <div className="flex-1">
               <h4 className="text-sm font-medium text-gray-900 mb-1">
-                Privacy layer active
+                Synthetic Persona Active
               </h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                External trackers see ephemeral signals that don't connect to your Vault identity
+              <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                Current profile fed to external trackers: <br />
+                <span className="font-medium text-indigo-700">Interested in minimalist decor and sustainable fashion.</span>
               </p>
+              <button className="text-xs py-2 px-4 bg-white border border-indigo-100 rounded-lg text-indigo-600 font-medium hover:bg-indigo-50 transition-colors">
+                Shuffle Persona
+              </button>
             </div>
           </div>
         </motion.div>

@@ -32,12 +32,11 @@ export default function Insights() {
     },
   ];
 
-  const stats = [
-    { label: 'Protected sessions', value: '127' },
-    { label: 'Vault reveals', value: '3' },
-    { label: 'Active days', value: '18' },
+const stats = [
+    { label: 'Synthetic Data Fed', value: '1,240' },
+    { label: 'Ads Confused', value: '34' },
+    { label: 'Vault Reveals', value: '3' },
   ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}

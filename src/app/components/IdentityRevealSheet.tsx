@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Fingerprint, CheckCircle2 } from 'lucide-react';
+import { Fingerprint, CheckCircle2, Lock } from 'lucide-react';
 import { useState } from 'react';
 
 interface IdentityRevealSheetProps {
@@ -200,7 +200,34 @@ export function IdentityRevealSheet({
                         {context} requires your authentic identity
                       </motion.p>
                     </div>
-
+{/* Data Request Summary Card (TAMBAHAN BARU) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18 }}
+                    className="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-4 text-left space-y-2 mt-4"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      {/* Pastikan lu import Lock dari 'lucide-react' di atas bareng Scan & ArrowRight */}
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                        🔒 Vault Data Requested
+                      </span>
+                    </div>
+                    <ul className="text-sm text-gray-700 space-y-2">
+                      <li className="flex justify-between border-b border-gray-100 pb-1">
+                        <span className="font-medium">Real Name</span>
+                        <span className="text-gray-500">Simon</span>
+                      </li>
+                      <li className="flex justify-between border-b border-gray-100 pb-1">
+                        <span className="font-medium">Payment</span>
+                        <span className="text-gray-500">Visa ending in 4242</span>
+                      </li>
+                      <li className="flex justify-between">
+                        <span className="font-medium">Shipping</span>
+                        <span className="text-gray-500">Yogyakarta, ID</span>
+                      </li>
+                    </ul>
+                  </motion.div>
                     {/* Actions */}
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
