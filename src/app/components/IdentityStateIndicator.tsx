@@ -13,7 +13,11 @@ export function IdentityStateIndicator({ mode }: IdentityStateIndicatorProps) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/20 shadow-sm"
+      className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-full backdrop-blur-2xl border shadow-sm transition-colors duration-500 ${
+        isSynthetic 
+          ? 'bg-white/60 border-gray-200/50' 
+          : 'bg-emerald-100/50 border-emerald-200/50'
+      }`}
     >
       {/* Animated glyph */}
       <motion.div
@@ -25,12 +29,12 @@ export function IdentityStateIndicator({ mode }: IdentityStateIndicatorProps) {
           repeat: isSynthetic ? Infinity : 0,
           ease: "linear",
         }}
-        className="relative"
+        className="relative flex items-center justify-center"
       >
         {isSynthetic ? (
-          <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+          <Sparkles className="w-4 h-4 text-indigo-500" />
         ) : (
-          <Shield className="w-3.5 h-3.5 text-emerald-600" />
+          <Shield className="w-4 h-4 text-emerald-600" />
         )}
       </motion.div>
 
@@ -40,7 +44,9 @@ export function IdentityStateIndicator({ mode }: IdentityStateIndicatorProps) {
         initial={{ opacity: 0, x: -5 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
-        className="text-[11px] text-gray-600 font-medium tracking-wide"
+        className={`text-xs font-semibold tracking-wide ${
+          isSynthetic ? 'text-gray-700' : 'text-emerald-800'
+        }`}
       >
         {isSynthetic ? 'Synthetic' : 'Vault'}
       </motion.span>
@@ -49,8 +55,8 @@ export function IdentityStateIndicator({ mode }: IdentityStateIndicatorProps) {
       <div className="relative w-1.5 h-1.5 ml-0.5">
         <motion.div
           animate={{
-            scale: [1, 1.4, 1],
-            opacity: [0.8, 0.3, 0.8],
+            scale: [1, 1.5, 1],
+            opacity: [0.8, 0.2, 0.8],
           }}
           transition={{
             duration: 2.5,
@@ -58,7 +64,7 @@ export function IdentityStateIndicator({ mode }: IdentityStateIndicatorProps) {
             ease: "easeInOut",
           }}
           className={`w-full h-full rounded-full ${
-            isSynthetic ? 'bg-indigo-400' : 'bg-emerald-400'
+            isSynthetic ? 'bg-indigo-500' : 'bg-emerald-500'
           }`}
         />
       </div>
